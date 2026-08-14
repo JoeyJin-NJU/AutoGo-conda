@@ -1,5 +1,10 @@
 # AutoGo-conda
 
+> **来源说明：** `AutoGo-conda` 基于 Eric Jang 的 MIT 开源项目
+> [AutoGo](https://github.com/ericjang/autogo) 整理和扩展。项目的动机、AlphaGo/MCTS、
+> self-play，以及它们与 LLM 强化学习和自动化 AI 研究的关系，可参考 Eric Jang 与
+> Dwarkesh Patel 的对谈 [*Building AlphaGo from scratch*](https://www.dwarkesh.com/p/eric-jang)。
+
 一个可直接在 Conda 环境中安装和运行的围棋 AI 训练框架。仓库保留 AutoGo 的
 Python/C++ 核心、完整的 `Self-play -> Train -> Arena -> Promote/Reject` 实验控制器、
 一个经过实战训练的 9x9 champion，以及可视化 MCTS 搜索的人机对弈界面。
@@ -106,7 +111,18 @@ bash "$EXP/launcher.sh" --resume
 
 该文件约 35.8 MB，低于 GitHub 单文件 100 MB 限制，因此不要求 Git LFS。
 
-## 许可与来源
+## 来源、对谈与许可
+
+AutoGo 的原始代码与研究构想来自 Eric Jang：
+
+- 原始仓库：[Eric Jang / AutoGo](https://github.com/ericjang/autogo)
+- 交互式教程：[AutoGo: a Tutorial](https://evjang.com/2026/04/28/autogo.html)
+- Eric Jang 与 Dwarkesh Patel 的对谈：[*Building AlphaGo from scratch*](https://www.dwarkesh.com/p/eric-jang)
+
+对谈从现代 AI 工具下重建 AlphaGo 出发，讨论 MCTS、self-play、强化学习的信用分配，
+以及哪些 AI 研究环节已经可以被 LLM 自动化。`AutoGo-conda` 在原项目基础上补充了
+Conda 安装路径、单机训练实验、9x9 champion 和浏览器演示；它不是 Eric Jang 原仓库的
+官方发行版。
 
 项目按 MIT License 发布。核心代码来源、快照 revision 和模型来源记录见
 [`NOTICE.md`](NOTICE.md)。
