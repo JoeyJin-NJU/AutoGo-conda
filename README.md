@@ -117,7 +117,6 @@ the experiment directory and are excluded by `.gitignore`.
 | Board / komi | 9x9 / 7.5 |
 | Promoted at | 2026-08-13 06:56:05 UTC |
 | Arena score | 0.5154639175 |
-| SHA-256 | `3bd995e19240b7d2e6511cbdba5a94b381c01a910ed974e97011704541b9467f` |
 
 The file is approximately 35.8 MB, below GitHub's 100 MB per-file limit, so Git LFS is not
 required.
