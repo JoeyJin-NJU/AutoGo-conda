@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package alpha_go;
+
+// Neural network inference service for batched evaluation
+service NNInference {
+    // Evaluate a single board state
+    rpc Evaluate(EvaluateRequest) returns (EvaluateResponse);
+
+    // Evaluate a batch of board states
+    rpc EvaluateBatch(EvaluateBatchRequest) returns (EvaluateBatchResponse);
+
+    // Reload model from checkpoint (blocks all Evaluate calls during reload)
+    rpc ReloadCheckpoint(ReloadCheckpointRequest) returns (ReloadCheckpointResponse);
+
+    // Load multiple checkpoints for parallel evaluation
+    rpc LoadCheckpoints(LoadCheckpointsRequest) returns (LoadCheckpointsResponse);
+}
+
+// Request to reload model checkpoint
+message ReloadCheckpointRequest {
+    // Path to checkpoint file
+    string checkpoint_path = 1;
+}
+
+// Response to checkpoint reload
+message ReloadCheckpointResponse {
+    bool success = 1;
+    string error_message = 2;
+}
+
+// Request to load multiple checkpoints (for parallel evaluation)
+message LoadCheckpointsRequest {
+    // List of checkpoint paths to load
+    repeated string checkpoint_paths = 1;
+}
+
+// Response to loading multiple checkpoints
+message LoadCheckpointsResponse {
+    bool success = 1;
+    string error_message = 2;
+    // IDs assigned to each checkpoint (typically the filename stem, e.g., "step_100")
+    repeated string checkpoint_ids = 3;
+}
+
+// Request for single evaluation
+message EvaluateRequest {
+    // Board state as flat array (H*W values: 0=empty, 1=current_player, 2=opponent)
+    repeated int32 board = 1;
+    int32 board_size = 2;
+    // If true, return dummy output immediately (for benchmarking serialization overhead)
+    bool dummy = 3;
+    // Checkpoint ID to route to (for multi-model inference server). Empty = use default/single model.
+    string checkpoint_id = 4;
+}
+
+// Response for single evaluation
+message EvaluateResponse {
+    // Policy logits for each position (H*W values)
+    repeated float policy_logits = 1;
+    // Value estimate (logit, not probability)
+    float value_logit = 2;
+    // Entropy of softmax(policy_logits) before legal move masking
+    float policy_entropy = 3;
+}
+
+// Request for batch evaluation
+message EvaluateBatchRequest {
+    // List of board states
+    repeated BoardState boards = 1;
+}
+
+message BoardState {
+    // Board state as flat array
+    repeated int32 board = 1;
+    int32 board_size = 2;
+    // Checkpoint ID to route to (for multi-model inference server). Empty = use default/single model.
+    string checkpoint_id = 3;
+}
+
+// Response for batch evaluation
+message EvaluateBatchResponse {
+    // Results for each board in the batch
+    repeated PolicyValue results = 1;
+}
+
+message PolicyValue {
+    // Policy probabilities (softmax applied) for each position
+    map<int32, float> policy = 1;
+    // Value estimate as probability (sigmoid applied)
+    float value = 2;
+    // Entropy of softmax(policy_logits) before legal move masking
+    float policy_entropy = 3;
+}

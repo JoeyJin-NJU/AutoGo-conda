@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>棋谱回放 · iter152 vs KataGo</title>
+    <link rel="stylesheet" href="/replay.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="返回 AutoGo 对弈页">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>
+            <strong>AutoGo Replay</strong>
+            <small>9×9 · Tromp–Taylor</small>
+          </span>
+        </a>
+        <div class="match-id">
+          <span>ITER 152</span>
+          <i aria-hidden="true"></i>
+          <span>KATAGO B10C128</span>
+        </div>
+        <a class="text-link" href="/">返回人机对弈</a>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="page-title">
+          <div>
+            <p class="eyebrow">CURATED MATCH REVIEW</p>
+            <h1 id="page-title">一胜一负，逐手复盘</h1>
+          </div>
+          <p class="intro-copy">
+            从 100 局参数量接近的对抗中，各取一局。败局是 iter152 执黑的代表性失利；胜局是执白半目险胜。
+          </p>
+        </section>
+
+        <section id="loading-state" class="load-state" aria-live="polite">
+          <span class="load-line"></span>
+          <span class="load-line short"></span>
+          <p>正在校验并载入棋谱…</p>
+        </section>
+
+        <section id="error-state" class="error-state" hidden aria-live="assertive">
+          <p class="eyebrow">REPLAY UNAVAILABLE</p>
+          <h2>棋谱载入失败</h2>
+          <p id="error-message"></p>
+          <button id="retry-button" class="secondary-action" type="button">重新载入</button>
+        </section>
+
+        <section id="replay-app" hidden>
+          <div id="game-tabs" class="game-tabs" role="tablist" aria-label="选择棋谱"></div>
+
+          <div class="replay-layout">
+            <section class="board-section" aria-label="棋盘回放">
+              <div class="player-strip">
+                <div class="player" id="black-player">
+                  <span class="stone-chip black" aria-hidden="true"></span>
+                  <span>
+                    <small>BLACK</small>
+                    <strong id="black-player-name"></strong>
+                  </span>
+                </div>
+                <div class="result-block">
+                  <small id="game-context"></small>
+                  <strong id="game-result"></strong>
+                </div>
+                <div class="player right" id="white-player">
+                  <span>
+                    <small>WHITE</small>
+                    <strong id="white-player-name"></strong>
+                  </span>
+                  <span class="stone-chip white" aria-hidden="true"></span>
+                </div>
+              </div>
+
+              <div class="board-frame">
+                <canvas id="go-board" width="760" height="760" aria-label="9路围棋棋盘"></canvas>
+              </div>
+
+              <div class="board-caption">
+                <span id="last-move-caption">初始局面</span>
+                <span id="rules-caption">贴 7.5 目 · 双方停一手结束</span>
+              </div>
+            </section>
+
+            <aside class="replay-panel" aria-label="回放控制">
+              <div class="outcome-header">
+                <div>
+                  <p class="eyebrow">SELECTED GAME</p>
+                  <h2 id="outcome-title"></h2>
+                </div>
+                <span id="outcome-badge" class="outcome-badge"></span>
+              </div>
+
+              <div class="move-readout" aria-live="polite">
+                <span id="move-fraction">0 / 0</span>
+                <strong id="move-coordinate">开局</strong>
+                <small id="move-detail">棋盘为空</small>
+              </div>
+
+              <div class="timeline-block">
+                <label for="move-slider">
+                  <span>对局进度</span>
+                  <span id="timeline-percent">0%</span>
+                </label>
+                <input id="move-slider" type="range" min="0" max="0" value="0" step="1" />
+              </div>
+
+              <div class="transport" aria-label="回放按钮">
+                <button id="first-button" type="button" aria-label="回到开局" title="回到开局">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 6l-8 6 8 6V6Z" /></svg>
+                </button>
+                <button id="previous-button" type="button" aria-label="上一手" title="上一手">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
+                </button>
+                <button id="play-button" class="play-button" type="button" aria-label="播放" title="播放">
+                  <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7V5Z" /></svg>
+                  <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
+                </button>
+                <button id="next-button" type="button" aria-label="下一手" title="下一手">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6" /></svg>
+                </button>
+                <button id="last-button" type="button" aria-label="跳到终局" title="跳到终局">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M6 6l8 6-8 6V6Z" /></svg>
+                </button>
+              </div>
+
+              <div class="replay-options">
+                <label>
+                  <span>播放速度</span>
+                  <select id="speed-select" aria-label="播放速度">
+                    <option value="0.5">0.5×</option>
+                    <option value="1" selected>1×</option>
+                    <option value="1.5">1.5×</option>
+                    <option value="2">2×</option>
+                  </select>
+                </label>
+                <label class="switch-row">
+                  <span>显示手数</span>
+                  <input id="numbers-toggle" type="checkbox" checked />
+                  <span class="switch" aria-hidden="true"></span>
+                </label>
+              </div>
+
+              <div class="move-list-header">
+                <span>着手记录</span>
+                <small>方向键逐手浏览</small>
+              </div>
+              <div id="move-list" class="move-list" aria-label="着手记录"></div>
+            </aside>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span id="evaluation-name">Arena evaluation</span>
+        <span>AutoGo 600 simulations · KataGo 128 visits</span>
+      </footer>
+    </div>
+
+    <script src="/replay.js" defer></script>
+  </body>
+</html>

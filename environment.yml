@@ -1,0 +1,12 @@
+name: autogo-conda
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip>=24
+  - setuptools>=68
+  - wheel
+  - cmake>=3.24
+  - ninja
+  - cxx-compiler
+  - git

@@ -1,0 +1,8 @@
+{
+  "arena_score": 0.5154639175257731,
+  "checkpoint": "local_data/checkpoints/2026-07-31_11-39-local-9x9-k7-pcr-001/iter1002-candidate.pt",
+  "iteration": 1002,
+  "promoted_at": "2026-08-13T06:56:05Z",
+  "reason": "strength_gate_passed",
+  "sha256": "3bd995e19240b7d2e6511cbdba5a94b381c01a910ed974e97011704541b9467f"
+}

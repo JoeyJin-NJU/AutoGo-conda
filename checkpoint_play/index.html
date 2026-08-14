@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#171a17">
+  <title>AutoGo MCTS 对弈台</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">AUTOGO / LIVE SEARCH</p>
+        <h1>Champion iter1002 对弈台</h1>
+      </div>
+      <div class="rule-line" aria-label="对局配置">
+        <span>9 × 9</span>
+        <span>贴目 7.5</span>
+        <span>模型落子 600 visits</span>
+        <a class="replay-link" href="/replay">棋谱回放</a>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="board-stage" aria-label="棋盘区域">
+        <div class="board-heading">
+          <div>
+            <p class="section-kicker">CURRENT POSITION</p>
+            <h2 id="turn">尚未开始</h2>
+          </div>
+          <div class="turn-chip" id="turnChip">等待对局</div>
+        </div>
+
+        <div class="canvas-frame" id="canvasFrame">
+          <canvas id="board" width="720" height="720" aria-label="九路围棋棋盘"></canvas>
+          <div class="candidate-tooltip" id="candidateTooltip" role="status" hidden></div>
+        </div>
+
+        <div class="board-footer">
+          <p id="message">选择 checkpoint 与执子方，然后开始对局。</p>
+          <div class="shortcuts" aria-label="快捷键">
+            <span><kbd>Space</kbd> MCTS 开始 / 停止</span>
+            <span><kbd>Esc</kbd> 停止分析</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="control-panel">
+        <section class="panel-section game-controls">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">MATCH</p>
+              <h2>对局设置</h2>
+            </div>
+            <span class="checkpoint-tag">CHAMPION · iter1002</span>
+          </div>
+
+          <div class="field">
+            <label for="checkpoint">Checkpoint</label>
+            <select id="checkpoint" aria-describedby="checkpointHelp"></select>
+            <small id="checkpointHelp">开始新局时加载；默认使用正式 champion。</small>
+          </div>
+
+          <fieldset class="field color-field">
+            <legend>你的执子方</legend>
+            <div class="segmented-control">
+              <label>
+                <input type="radio" name="color" value="black" checked>
+                <span><i class="stone-icon black-stone"></i>黑方</span>
+              </label>
+              <label>
+                <input type="radio" name="color" value="white">
+                <span><i class="stone-icon white-stone"></i>白方</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="game-actions">
+            <button id="newGame" class="button button-primary" type="button">开始新对局</button>
+            <button id="pass" class="button button-quiet" type="button" disabled>停一手</button>
+          </div>
+        </section>
+
+        <section class="panel-section analysis-panel">
+          <div class="section-heading analysis-heading">
+            <div>
+              <p class="section-kicker">MCTS ANALYSIS</p>
+              <h2>持续搜索</h2>
+            </div>
+            <div class="analysis-status" id="analysisStatus" data-status="idle">
+              <span class="status-dot"></span>
+              <span id="analysisStatusText">未启动</span>
+            </div>
+          </div>
+
+          <p class="analysis-note">不设访问上限。同一棵搜索树会持续累积，直到手动停止或棋盘发生变化。</p>
+
+          <div class="analysis-actions">
+            <button id="startAnalysis" class="button button-analysis" type="button" disabled>
+              启动 MCTS
+            </button>
+            <button id="stopAnalysis" class="button button-stop" type="button" disabled>
+              停止
+            </button>
+          </div>
+
+          <div class="metrics" aria-label="MCTS 实时指标">
+            <div class="metric metric-primary">
+              <span>总访问量</span>
+              <strong id="rootVisits">0</strong>
+            </div>
+            <div class="metric">
+              <span>访问 / 秒</span>
+              <strong id="visitsPerSecond">0</strong>
+            </div>
+            <div class="metric">
+              <span>当前方胜率</span>
+              <strong id="rootWinrate">—</strong>
+            </div>
+            <div class="metric">
+              <span>搜索时间</span>
+              <strong id="analysisElapsed">0:00</strong>
+            </div>
+          </div>
+
+          <div class="candidate-header">
+            <div>
+              <h3>候选手</h3>
+              <p>圆点显示搜索访问占比；胜率均为当前行棋方视角。</p>
+            </div>
+            <span id="candidateCount">0 个</span>
+          </div>
+
+          <div class="candidate-columns" aria-hidden="true">
+            <span>点位</span>
+            <span>搜索占比</span>
+            <span>胜率</span>
+            <span>Visits</span>
+          </div>
+          <div id="candidateList" class="candidate-list" aria-live="polite">
+            <div class="empty-analysis">
+              <span class="empty-ring"></span>
+              <p>启动 MCTS 后，候选点会直接显示在棋盘上。</p>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

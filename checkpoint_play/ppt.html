@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111411">
+  <title>AutoGo · 16:9 Live Demo</title>
+  <link rel="stylesheet" href="/ppt.css">
+</head>
+<body data-mode="presentation">
+  <div class="presentation-shell">
+    <header class="presentation-topbar">
+      <div class="brand-lockup">
+        <span class="brand-mark" aria-hidden="true">
+          <i class="brand-stone brand-stone-black"></i>
+          <i class="brand-stone brand-stone-white"></i>
+        </span>
+        <div>
+          <p class="eyebrow">AUTOGO / LIVE INFERENCE</p>
+          <h1>与训练中的 AI 下一盘</h1>
+        </div>
+      </div>
+
+      <div class="presentation-context" aria-label="演示配置">
+        <div class="rule-line">
+          <span>9 × 9</span>
+          <span>贴目 7.5</span>
+          <span>600 simulations</span>
+        </div>
+        <a class="replay-link" href="/replay" target="_blank" rel="noopener">ARENA REPLAY</a>
+      </div>
+    </header>
+
+    <main class="presentation-workspace">
+      <section class="board-stage" aria-label="实时对弈棋盘">
+        <div class="board-heading">
+          <div>
+            <p class="section-kicker">CURRENT POSITION</p>
+            <h2 id="turn">尚未开始</h2>
+          </div>
+          <div class="turn-chip" id="turnChip">等待对局</div>
+        </div>
+
+        <div class="board-canvas-zone">
+          <div class="canvas-frame" id="canvasFrame">
+            <canvas id="board" width="720" height="720" aria-label="九路围棋棋盘"></canvas>
+            <div class="candidate-tooltip" id="candidateTooltip" role="status" hidden></div>
+          </div>
+        </div>
+
+        <div class="board-footer">
+          <p id="message" aria-live="polite">选择 checkpoint 与执子方，然后开始对局。</p>
+          <div class="board-legend" aria-label="棋盘标记说明">
+            <span><i class="legend-ring"></i>最后一手</span>
+            <span><i class="legend-candidate">1</i>MCTS 候选</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="control-panel" aria-label="对局和搜索控制">
+        <section class="panel-section match-panel">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">MATCH SETUP</p>
+              <h2>选择对手</h2>
+            </div>
+            <span class="checkpoint-tag">LIVE MODEL</span>
+          </div>
+
+          <div class="field checkpoint-field">
+            <label for="checkpoint">Checkpoint</label>
+            <select id="checkpoint" aria-describedby="checkpointHelp"></select>
+            <small id="checkpointHelp">开始新局时加载所选模型。</small>
+          </div>
+
+          <fieldset class="field color-field">
+            <legend>你的执子方</legend>
+            <div class="segmented-control">
+              <label>
+                <input type="radio" name="color" value="black" checked>
+                <span><i class="stone-icon black-stone"></i>执黑</span>
+              </label>
+              <label>
+                <input type="radio" name="color" value="white">
+                <span><i class="stone-icon white-stone"></i>执白</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="game-actions">
+            <button id="newGame" class="button button-primary" type="button" disabled>开始新对局</button>
+            <button id="pass" class="button button-quiet" type="button" disabled>停一手</button>
+          </div>
+        </section>
+
+        <section class="panel-section analysis-panel">
+          <div class="section-heading analysis-heading">
+            <div>
+              <p class="section-kicker">MCTS SEARCH</p>
+              <h2>让思考过程可见</h2>
+            </div>
+            <div class="analysis-status" id="analysisStatus" data-status="idle">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span id="analysisStatusText">未启动</span>
+            </div>
+          </div>
+
+          <p class="analysis-note">持续累积同一棵搜索树，直至手动停止或棋盘发生变化。</p>
+
+          <div class="analysis-actions">
+            <button id="startAnalysis" class="button button-analysis" type="button" disabled>启动 MCTS</button>
+            <button id="stopAnalysis" class="button button-stop" type="button" disabled>停止</button>
+          </div>
+
+          <div class="metrics" aria-label="MCTS 实时指标">
+            <div class="metric metric-primary">
+              <span>总访问量</span>
+              <strong id="rootVisits">0</strong>
+            </div>
+            <div class="metric">
+              <span>访问 / 秒</span>
+              <strong id="visitsPerSecond">0</strong>
+            </div>
+            <div class="metric">
+              <span>当前方胜率</span>
+              <strong id="rootWinrate">—</strong>
+            </div>
+            <div class="metric">
+              <span>搜索时间</span>
+              <strong id="analysisElapsed">0:00</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel-section candidates-panel">
+          <div class="candidate-header">
+            <div>
+              <p class="section-kicker">TOP VARIATIONS</p>
+              <h2>前三候选手</h2>
+            </div>
+            <span id="candidateCount">0 个</span>
+          </div>
+
+          <div class="candidate-columns" aria-hidden="true">
+            <span>点位</span>
+            <span>搜索占比</span>
+            <span>胜率</span>
+            <span>Visits</span>
+          </div>
+          <div id="candidateList" class="candidate-list" aria-live="polite">
+            <div class="empty-analysis">
+              <span class="empty-ring"></span>
+              <p>启动 MCTS 后，前三候选点会同步投射到棋盘。</p>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
