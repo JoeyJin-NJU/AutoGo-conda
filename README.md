@@ -13,6 +13,26 @@ visualizing its MCTS search.
 
 ![AutoGo checkpoint play interface](docs/images/checkpoint-play.png)
 
+## Group discussion slides
+
+I created this PowerPoint presentation, *As Rocks May Think*, for sharing and
+discussion with my research group. Its content is primarily adapted from
+[Eric Jang's conversation with Dwarkesh Patel](https://www.dwarkesh.com/p/eric-jang)
+and [Eric Jang's personal blog](https://evjang.com/), especially
+[*As Rocks May Think*](https://evjang.com/2026/02/04/rocks.html).
+The slides are shared here as a 70-page PDF. **Everyone is welcome to download them!**
+
+**[View the PDF](docs/alphago.pdf)** ·
+**[Download the PDF](https://github.com/JoeyJin-NJU/AutoGo-conda/raw/refs/heads/main/docs/alphago.pdf)**
+
+Selected pages are shown below. Click a preview to view it at full size.
+
+| Cover (page 1) | Monte Carlo Tree Search (page 9) |
+| --- | --- |
+| [![Presentation cover](docs/images/alphago-page-01.png)](docs/images/alphago-page-01.png) | [![MCTS steps and PUCT formula](docs/images/alphago-page-09.png)](docs/images/alphago-page-09.png) |
+| **Self-play, training, and Arena (page 42)** | **MCTS and training acceleration (page 46)** |
+| [![Training loop and champion promotion](docs/images/alphago-page-42.png)](docs/images/alphago-page-42.png) | [![MCTS and training throughput comparisons](docs/images/alphago-page-46.png)](docs/images/alphago-page-46.png) |
+
 ## Repository contents
 
 - `src/alpha_go/`: Go rules, neural networks, MCTS, self-play, and inference code.
@@ -22,6 +42,7 @@ visualizing its MCTS search.
 - `local_data/checkpoints/.../iter1002-candidate.pt`: the bundled promoted champion.
 - `checkpoint_play/`: human-vs-AI play, continuous MCTS visualization, and two Arena
   game replays.
+- `docs/alphago.pdf`: group discussion slides, with selected page previews in `docs/images/`.
 - `tests/`: core Python/C++ tests for rules, MCTS, models, and data handling.
 
 The original experiment directory is approximately 15 GB. This repository includes only
